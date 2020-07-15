@@ -4,6 +4,7 @@
 #include "PawnBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ToonTanks/Actors/ProjectileBase.h"
 
 // Sets default values
 APawnBase::APawnBase()
@@ -45,6 +46,13 @@ void APawnBase::Fire()
 {
 	//Fire projectiles at given intervals, same for both AI and the player
 	UE_LOG(LogTemp, Warning, TEXT("FIRE"));
+	FVector projectileSpawnLoc = projectileSpawn->GetComponentLocation();
+	FRotator projectileSpawnRot = projectileSpawn->GetComponentRotation();
+
+	if (projectileClass) {
+		AProjectileBase* tempProjectile = GetWorld()->SpawnActor<AProjectileBase>(projectileClass, projectileSpawnLoc, projectileSpawnRot);
+		tempProjectile->SetOwner(this);
+	}
 }
 
 void APawnBase::HandleDestruction()
