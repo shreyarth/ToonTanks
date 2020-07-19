@@ -7,14 +7,20 @@
 #include "ToonTanksGameModeBase.generated.h"
 
 
+class APawnTurret;
+class APawnTank;
 UCLASS()
 class TOONTANKS_API AToonTanksGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
 private:
+	int32 targetTurrets = 0.f;
+	APawnTank* playerTank;
+
 	//These funcitons will handle the c++ side of the game mode, keeping track
 	//of what is currently happening in the game
+	int32 GetTargetTurrets();
 	void HandleGameStart();
 	void HandleGameOver(bool playerWon);
 

@@ -2,6 +2,9 @@
 
 
 #include "ToonTanksGameModeBase.h"
+#include "ToonTanks/Pawns/PawnTank.h"
+#include "ToonTanks/Pawns/PawnTurret.h"
+#include "Kismet/GameplayStatics.h"
 
 AToonTanksGameModeBase::AToonTanksGameModeBase()
 {
@@ -12,6 +15,8 @@ AToonTanksGameModeBase::AToonTanksGameModeBase()
 void AToonTanksGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	HandleGameStart();
 }
 
 void AToonTanksGameModeBase::Tick(float DeltaTime)
@@ -21,12 +26,43 @@ void AToonTanksGameModeBase::Tick(float DeltaTime)
 
 void AToonTanksGameModeBase::ActorDied(AActor * deadActor)
 {
+	//Check who died
+	//If player...go to lose condition
+	//If turret...decrease turret number
+	UE_LOG(LogTemp, Warning, TEXT("A pawn has died"));
+	if (deadActor == playerTank) {
+		playerTank->HandleDestruction();
+		HandleGameOver(false);
+	}
+	else if (APawnTurret* destroyedTurret = Cast<APawnTurret>(deadActor)) {
+		destroyedTurret->HandleDestruction();
+
+		if (--targetTurrets == 0) { HandleGameOver(true); }
+	}
 }
 
-void AToonTanksGameModeBase::HandleGameStart() 
+int32 AToonTanksGameModeBase::GetTargetTurrets()
 {
+	TArray<AActor*> turretActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APawnTurret::StaticClass(), turretActors);
+	return turretActors.Num();
+}
+
+void AToonTanksGameModeBase::HandleGameStart()
+{
+	//Intialize game start, activate turrets, check if all pawns are active.
+	//Start the blueprint version of GameStart()
+	targetTurrets = GetTargetTurrets();
+	playerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	GameStart();
 }
 
 void AToonTanksGameModeBase::HandleGameOver(bool playerWon)
 {
+	//Check for the game win or lose conditions
+	//If player is dead, show lost game
+	//If player kills all turrets, show win game
+	//Call blueprint version of GameOver(bool playerWon)
+	GameOver(playerWon);
 }
