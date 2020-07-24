@@ -34,6 +34,11 @@ public:
 	void ActorDied(AActor* deadActor);
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
+		int32 startDelay = 3;
+
+
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
