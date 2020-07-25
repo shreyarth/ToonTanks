@@ -4,7 +4,9 @@
 #include "PawnBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Actors/ProjectileBase.h"
+#include "ToonTanks/Components/HealthComponent.h"
 
 // Sets default values
 APawnBase::APawnBase()
@@ -23,6 +25,8 @@ APawnBase::APawnBase()
 
 	projectileSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn"));
 	projectileSpawn->SetupAttachment(turretMesh);
+
+	healthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 }
 
 // Called when the game starts or when spawned
@@ -58,9 +62,10 @@ void APawnBase::Fire()
 void APawnBase::HandleDestruction()
 {
 	//A bit complicated
-	//Functionality for player...particles, sounds, quality of life implementations
-
-
+	//Functionality for player and turrets...particles, sounds, quality of life implementations
+	UGameplayStatics::SpawnEmitterAtLocation(this, deathParticle, GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(this, deathSound, GetActorLocation());
+	GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(deathShake);
 	//Some other modifiers applicable to individual children
 	//if player dies, tell gamemode that player has died and hide everything and stop receiving input
 

@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFrameWork/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -20,6 +21,9 @@ AProjectileBase::AProjectileBase()
 	projectileMovement->InitialSpeed = projectileSpeed;
 	projectileMovement->MaxSpeed = projectileSpeed;
 
+	trailComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Trail"));
+	trailComponent->SetupAttachment(RootComponent);
+
 	InitialLifeSpan = 3.0f;
 }
 
@@ -28,6 +32,7 @@ void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UGameplayStatics::PlaySoundAtLocation(this, launchSound, GetActorLocation());
 }
 
 // Called every frame
@@ -46,8 +51,10 @@ void AProjectileBase::OnHit(UPrimitiveComponent* hitComp, AActor* otherActor, UP
 	//if otheractor is not the projectileowner or the projectile itself and it exists, then do damage
 	if (otherActor != NULL && otherActor != this && otherActor != projectileOwner) {
 		UGameplayStatics::ApplyDamage(otherActor, damage, projectileOwner->GetInstigatorController(), this, damageType);
+		UGameplayStatics::SpawnEmitterAtLocation(otherActor, hitParticle, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, hitSound, GetActorLocation());
+		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(hitShake);
+		Destroy();
 	}
-
 	//Add more effects code here when polishing the game
-	Destroy();
 }
