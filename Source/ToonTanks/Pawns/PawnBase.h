@@ -28,6 +28,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectileBase> projectileClass;
 
+
+
 public:
 	// Sets default values for this pawn's properties
 	APawnBase();

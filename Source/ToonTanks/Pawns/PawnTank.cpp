@@ -23,13 +23,6 @@ void APawnTank::BeginPlay()
 	playerControllerRef = Cast<APlayerController>(GetController());
 }
 
-void APawnTank::HandleDestruction(){
-	Super::HandleDestruction();
-
-	//Hide player...create new function for it
-	Destroy();
-}
-
 // Called every frame
 void APawnTank::Tick(float DeltaTime)
 {
@@ -44,6 +37,20 @@ void APawnTank::Tick(float DeltaTime)
 
 		RotateTurret(hitLoc);
 	}
+}
+
+void APawnTank::HandleDestruction(){
+	Super::HandleDestruction();
+
+	//Hide player...create new function for it
+	bIsPlayerAlive = false;
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
+}
+
+bool APawnTank::GetIsPlayerAlive()
+{
+	return bIsPlayerAlive;
 }
 
 // Called to bind functionality to input

@@ -30,6 +30,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed var", meta = (AllowPrivateAccess = "true"))
 		float rotSpeed = 100.f;
 
+	bool bIsPlayerAlive = true;
+
+
 	void CalculateMoveInput(float value);
 	void CalculateRotInput(float value);
 
@@ -47,6 +50,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void HandleDestruction() override;
+
+	bool GetIsPlayerAlive();
 
 protected:
 	// Called when the game starts or when spawned

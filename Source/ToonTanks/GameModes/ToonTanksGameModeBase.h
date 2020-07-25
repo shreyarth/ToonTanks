@@ -9,6 +9,7 @@
 
 class APawnTurret;
 class APawnTank;
+class APlayerControllerBase;
 UCLASS()
 class TOONTANKS_API AToonTanksGameModeBase : public AGameModeBase
 {
@@ -17,6 +18,7 @@ class TOONTANKS_API AToonTanksGameModeBase : public AGameModeBase
 private:
 	int32 targetTurrets = 0.f;
 	APawnTank* playerTank;
+	APlayerControllerBase* playerControllerRef;
 
 	//These funcitons will handle the c++ side of the game mode, keeping track
 	//of what is currently happening in the game

@@ -36,7 +36,7 @@ void APawnTurret::CheckFireCondition() {
 	//If player is dead, then return
 	if (!player) { return; }
 
-	if (DistanceToPlayer() <= fireRange) {
+	if (DistanceToPlayer() <= fireRange && player->GetIsPlayerAlive()) {
 		//UE_LOG(LogTemp, Warning, TEXT("FIRE"));
 		Fire();
 	}
